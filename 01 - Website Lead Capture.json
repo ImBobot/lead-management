@@ -1,0 +1,229 @@
+{
+  "name": "01 - Website Lead Capture",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "customer inquiry",
+        "formDescription": "Submit your details and our team will contact you",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Full Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Phone Number",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "How can we help you?",
+              "fieldType": "textarea",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "buttonLabel": "Submit Inquiry",
+          "path": "website-lead-capture"
+        }
+      },
+      "id": "9dba3eb5-7f57-47c2-b059-617bcf9bf763",
+      "name": "On form submission",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "7662340b-b6e7-4352-accd-7a63a976f321"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1A0AaMX3fNitQGpzml7Pi1CA_OALTLB1qgNZLArKoI-c",
+          "mode": "list",
+          "cachedResultName": "AI-Lead management- Lead Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1A0AaMX3fNitQGpzml7Pi1CA_OALTLB1qgNZLArKoI-c/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1A0AaMX3fNitQGpzml7Pi1CA_OALTLB1qgNZLArKoI-c/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Lead ID": "=LEAD-{{ $execution.id }}",
+            "Date Submitted": "={{ $json.submittedAt }}",
+            "Full Name ": "={{ $json[\"Full Name\"] }}",
+            "Email ": "={{ $json.Email }}",
+            "Phone": "={{ $json[\"Phone Number\"] }}",
+            "Business Inquiry ": "={{ $json[\"How can we help you?\"] }}",
+            "Lead Status": "New"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Lead ID",
+              "displayName": "Lead ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Date Submitted",
+              "displayName": "Date Submitted",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Full Name ",
+              "displayName": "Full Name ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email ",
+              "displayName": "Email ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Business Inquiry ",
+              "displayName": "Business Inquiry ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Lead Status",
+              "displayName": "Lead Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "5dd5583a-388a-4bf7-8be3-804762cd6a46",
+      "name": "Append row in sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "dLYx1ml5UQ17Ayjd",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "elayaagri.solution@gmail.com",
+        "subject": "New Customer Inquiry Received!",
+        "emailType": "text",
+        "message": "=NEW CUSTOMER INQUIRY  Customer Name: {{ $('On form submission').item.json[\"Full Name\"] }}  Email: {{ $('On form submission').item.json[\"Email\"] }}  Phone: {{ $('On form submission').item.json[\"Phone Number\"] }}  Inquiry: {{ $('On form submission').item.json[\"How can we help you?\"] }}  Submission Date: {{ $('On form submission').item.json[\"submittedAt\"] }}  Status: NEW",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        0
+      ],
+      "id": "2e3ef5fe-f666-496f-8943-b99cdf44c790",
+      "name": "Send a message",
+      "webhookId": "b6d03805-974f-4f43-bbca-fe97d5223e43",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "AXubmr74xA0EpqQz",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "75562db1-f4dd-499a-a4e0-2ea842381f1e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ecde6ccf2eef8d708d33b835b3f04bce40f51382195230c06085dae69a337cad"
+  },
+  "nodeGroups": [],
+  "id": "hihXwul4xQkqnHLi",
+  "tags": []
+}
